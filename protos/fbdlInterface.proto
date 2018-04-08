@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.fbdl.benchmark.grpc";
+option java_outer_classname = "bm";
+
+package bm;
+
+service BmService {
+   rpc simpleService(ServiceRequest) returns (ServiceResponse) {}
+}
+
+message ServiceRequest {
+   string name = 1;
+}
+
+message ServiceResponse {
+   string name = 1;
+}
