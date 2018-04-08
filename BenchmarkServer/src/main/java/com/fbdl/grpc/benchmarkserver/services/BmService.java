@@ -20,6 +20,7 @@ public class BmService extends BmServiceGrpc.BmServiceImplBase {
     @Override
     public void simpleService(ServiceRequest request, StreamObserver<ServiceResponse> responseObserver) {
         LOG.info("simple Service invoked " + request.toString());
+        System.out.println("simple Service invoked " + request.toString());
         
         ServiceResponse response = ServiceResponse.newBuilder()
                                                   .setName("name from server")

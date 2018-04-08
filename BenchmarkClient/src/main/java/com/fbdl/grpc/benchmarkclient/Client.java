@@ -43,25 +43,19 @@ public class Client {
         
         channel = NettyChannelBuilder.forAddress(BmProperties.INSTANCE.getTargetAddress(),
                                                  BmProperties.INSTANCE.getEdgePort())
-                                     .usePlaintext(true)
-//                                     .sslContext(GrpcSslContexts.forClient().trustManager(new File(BmProperties.INSTANCE.getEdgeCertPath())).build())
+                                     .sslContext(GrpcSslContexts.forClient().trustManager(new File(BmProperties.INSTANCE.getEdgeCertPath())).build())
                                      .build();
         
         bmBlocking = BmServiceGrpc.newBlockingStub(channel);
         ServiceRequest req = ServiceRequest.newBuilder().setName("client name").build();
         
         try{
+            System.out.println("calling");
             ServiceResponse res = bmBlocking.simpleService(req);
             LOG.info("message received " + res.toString());
+            System.out.println("response " + res.toString());
         } catch (StatusRuntimeException ex) {
             ex.printStackTrace();
-        }
-       
-        System.out.println("sleeping");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

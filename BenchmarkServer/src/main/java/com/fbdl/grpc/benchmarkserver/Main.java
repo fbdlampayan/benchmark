@@ -35,13 +35,14 @@ public class Main {
 
     private void initializeEdgeServer() throws IOException, InterruptedException {
         LOG.info("server launched");
+        System.out.println("launching");
         
         int servingPort = BmProperties.INSTANCE.getEdgePort();
         String serverKey = BmProperties.INSTANCE.getEdgeCertKey();
         String serverCert = BmProperties.INSTANCE.getEdgeCertPath();
         
         NettyServerBuilder.forPort(servingPort)
-//                          .useTransportSecurity(new File(serverCert), new File(serverKey))
+                          .useTransportSecurity(new File(serverCert), new File(serverKey))
                           .addService(new BmService())
                           .executor(Executors.newFixedThreadPool(BmProperties.INSTANCE.getEdgeThreads()))
                           .build()
