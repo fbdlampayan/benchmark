@@ -1,6 +1,7 @@
 package com.fbdl.grpc.benchmarkserver;
 
 import com.fbdl.grpc.benchmarkserver.services.BmService;
+import com.fbdl.grpc.benchmarkserver.services.LongLived;
 import com.fbdl.grpc.benchmarkserver.utils.BmProperties;
 import com.fbdl.grpc.benchmarkserver.utils.BmUtil;
 import io.grpc.netty.NettyServerBuilder;
@@ -45,6 +46,7 @@ public class Main {
         NettyServerBuilder.forPort(servingPort)
                           .useTransportSecurity(new File(serverCert), new File(serverKey))
                           .addService(new BmService())
+                          .addService(new LongLived())
                           .executor(Executors.newFixedThreadPool(BmProperties.INSTANCE.getEdgeThreads()))
                           .build()
                           .start()
