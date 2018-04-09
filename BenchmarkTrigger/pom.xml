@@ -128,7 +128,7 @@
             <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
             <protoSourceRoot>../protos</protoSourceRoot>
             <includes>
-                <include>fbdlInterface.proto</include>
+                <include>sm.proto</include>
             </includes>
             <outputDirectory>${basedir}/target/generated-sources</outputDirectory>
             <clearOutputDirectory>false</clearOutputDirectory>
