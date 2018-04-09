@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.fbdl.grpc</groupId>
-    <artifactId>BenchmarkClient</artifactId>
-    <version>1.0</version>
+    <artifactId>BenchmarkTrigger</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -156,7 +156,7 @@
                         <archive>
                         <manifest>
                             <mainClass>
-                                com.fbdl.grpc.benchmarkclient.Client
+                                com.fbdl.grpc.benchmarktrigger.TriggerClient
                             </mainClass>
                         </manifest>
                         </archive>
@@ -172,7 +172,7 @@
             <artifactId>docker-maven-plugin</artifactId>
             <version>1.0.0</version>
             <configuration>
-               <imageName>fbdl.reg/prototypes/benchmarkClient:v1</imageName>
+               <imageName>fbdl.reg/prototypes/benchmarkTrigger:v1</imageName>
                <dockerDirectory>${project.basedir}</dockerDirectory>
             </configuration>
          </plugin>

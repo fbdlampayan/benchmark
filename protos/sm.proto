@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.fbdl.benchmark.grpc";
+option java_outer_classname = "sm";
+
+package sm;
+
+service SmService {
+   rpc provisionSim(SimRequest) returns (SimResponse) {}
+}
+
+message SimRequest {
+   string name = 1;
+   string imsi = 2;
+}
+
+message SimResponse {
+   string name = 1;
+   string pnmid = 2;
+}
+

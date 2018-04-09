@@ -13,6 +13,23 @@ public enum BmProperties {
     private String edgeCertKey;
     private int edgeThreads;
     
+    private int internalPort;
+
+    /**
+     * @return the internalPort
+     */
+    public int getInternalPort() {
+        return internalPort;
+    }
+
+    /**
+     * @param internalPort the internalPort to set
+     */
+    public void setInternalPort(int internalPort) {
+        this.internalPort = internalPort;
+    }
+
+    
     /**
      * @return the edgePort
      */

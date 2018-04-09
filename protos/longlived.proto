@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+import "sm.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fbdl.benchmark.grpc";
+option java_outer_classname = "longlived";
+
+package longlived;
+
+service LongLivedService {
+   rpc subscribe(stream SubscribeRequest) returns (stream Notification) {}
+
+   rpc edgeProvisionSim(stream EdgeSimResponse) returns (stream sm.SimRequest) {}
+}
+
+message SubscribeRequest {
+   string hwid = 1;
+}
+
+message Notification {
+   string transactionId = 1;
+   Procedure procedure = 2;
+}
+
+enum Procedure {
+   ADDUES = 0;
+}
+
+message EdgeSimResponse {
+   string transactionId = 1;
+   Type type = 2;
+   sm.SimResponse simResponseMessage = 3;
+}
+
+enum Type {
+   INIT = 0;
+   RESPONSE = 1;
+}

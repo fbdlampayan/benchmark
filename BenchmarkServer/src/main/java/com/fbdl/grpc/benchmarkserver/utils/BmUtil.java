@@ -45,5 +45,6 @@ public class BmUtil {
         BmProperties.INSTANCE.setEdgeCertPath(getPropertyValue("bm.certpath"));
         BmProperties.INSTANCE.setEdgePort(getPropertyNumericValue("bm.port"));
         BmProperties.INSTANCE.setEdgeThreads(getPropertyNumericValue("bm.threads"));
+        BmProperties.INSTANCE.setInternalPort(getPropertyNumericValue("bm.internalport"));
     }
 }

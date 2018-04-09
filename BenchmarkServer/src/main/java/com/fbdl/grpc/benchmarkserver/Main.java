@@ -30,6 +30,7 @@ public class Main {
             return;
         }
         
+        initializeInternalServer();
         initializeEdgeServer();
     }
 
@@ -49,6 +50,12 @@ public class Main {
                           .start()
                           .awaitTermination();
     }
+    
+    private void initializeInternalServer() {
+        BmInternalServer internalServer = new BmInternalServer();
+        Thread t = new Thread(internalServer);
+        t.start();
+    }    
     
     public static void main(String[] args) throws IOException, InterruptedException {
         Main server = new Main();
