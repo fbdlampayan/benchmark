@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+import "sm.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fbdl.benchmark.grpc";
+option java_outer_classname = "polling";
+
+package polling;
+
+service PollingService {
+   rpc subscribe(PollingRequest) returns (PollingNotification) {}
+
+   rpc edgePollingProvisionSim(stream EdgeSimPollingResponse) returns (stream sm.SimRequest) {}
+}
+
+message PollingRequest {
+   string hwid = 1;
+}
+
+message PollingNotification {
+   string transactionId = 1;
+   PollingProcedure procedure = 2;
+}
+
+enum PollingProcedure {
+   ADDUES = 0;
+}
+
+message EdgeSimPollingResponse {
+   string transactionId = 1;
+   PollingType type = 2;
+   sm.SimResponse simResponseMessage = 3;
+}
+
+enum PollingType {
+   INIT = 0;
+   RESPONSE = 1;
+}

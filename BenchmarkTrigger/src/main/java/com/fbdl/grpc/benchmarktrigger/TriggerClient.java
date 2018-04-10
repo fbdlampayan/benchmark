@@ -26,8 +26,12 @@ public class TriggerClient {
         try {
             SimRequest request = SimRequest.newBuilder().setHwid("111").setName("name from client").setImsi("imsi from client").build();
             //or does tcp handshake start here?
+            long start = System.nanoTime();
             SimResponse response = clientBlocking.provisionSim(request);
+            long end = System.nanoTime();
+            long out = end - start;
             System.out.println("response: " + response.toString());
+            System.out.println("ET: " + out / 1000000);
         }
         catch(Exception e) {
             e.printStackTrace();

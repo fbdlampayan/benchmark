@@ -131,6 +131,7 @@
                 <include>fbdlInterface.proto</include>
                 <include>longlived.proto</include>
                 <include>sm.proto</include>
+                <include>polling.proto</include>
             </includes>
             <outputDirectory>${basedir}/target/generated-sources</outputDirectory>
             <clearOutputDirectory>false</clearOutputDirectory>

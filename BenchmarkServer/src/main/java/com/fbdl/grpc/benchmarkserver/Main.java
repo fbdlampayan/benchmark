@@ -5,6 +5,7 @@ import com.fbdl.benchmark.grpc.SimRequest;
 import com.fbdl.benchmark.grpc.SimResponse;
 import com.fbdl.grpc.benchmarkserver.services.BmService;
 import com.fbdl.grpc.benchmarkserver.services.LongLived;
+import com.fbdl.grpc.benchmarkserver.services.PollingServices;
 import com.fbdl.grpc.benchmarkserver.utils.BmProperties;
 import com.fbdl.grpc.benchmarkserver.utils.BmUtil;
 import io.grpc.netty.NettyServerBuilder;
@@ -57,6 +58,7 @@ public class Main {
                           .useTransportSecurity(new File(serverCert), new File(serverKey))
                           .addService(new BmService())
                           .addService(new LongLived(subscribedHwMap, simRequestMessageCache, simResponseObserverMap))
+                          .addService(new PollingServices(subscribedHwMap, simRequestMessageCache, simResponseObserverMap))
                           .executor(Executors.newFixedThreadPool(BmProperties.INSTANCE.getEdgeThreads()))
                           .build()
                           .start()

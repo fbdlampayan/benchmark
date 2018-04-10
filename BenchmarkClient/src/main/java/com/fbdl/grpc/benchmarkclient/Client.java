@@ -36,20 +36,22 @@ public class Client {
             LOG.error("Failed to load config file " + ex.getMessage());
             return;
         }
+       
         
-        //trigger subscription
-        //wait for notification
-        //when notification arrives, create a new tls tunnel and catch the request
-        //provide the response. 
-        //forever wait
+        Polling p = new Polling();
+        p.triggerPolling();
         
-        //triggerSimpleService();
-        LongLivedProcess l = new LongLivedProcess();
-        l.triggerSubscribe();
+//        triggerLongLived();
         System.out.println("done!!!");
 
         while (true) {}
 
+    }
+
+    private void triggerLongLived() throws SSLException {
+        //triggerSimpleService();
+        LongLivedProcess l = new LongLivedProcess();
+        l.triggerSubscribe();
     }
 
     private void triggerSimpleService() throws SSLException {

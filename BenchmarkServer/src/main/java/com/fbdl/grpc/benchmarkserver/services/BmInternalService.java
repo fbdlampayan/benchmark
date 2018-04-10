@@ -33,15 +33,28 @@ public class BmInternalService extends SmServiceGrpc.SmServiceImplBase {
     @Override
     public void provisionSim(SimRequest request, StreamObserver<SimResponse> responseObserver) {
         System.out.println("provision sim invoked");
+        pollingSupport(request, responseObserver);
+    }
+    
+    private void pollingSupport(SimRequest request, StreamObserver<SimResponse> responseObserver) {
+        System.out.println("polling way");
+        String transactionId = request.getHwid();
+        
+        simRequestMessageCache.put(transactionId, request);
+        simResponseObserverMap.put(transactionId, responseObserver);
+    }
+
+    private void longLivedSupport(SimRequest request, StreamObserver<SimResponse> responseObserver) {
+        System.out.println("longlived way");
         String transactionId = UUID.randomUUID().toString();
         
         simRequestMessageCache.put(transactionId, request);
         simResponseObserverMap.put(transactionId, responseObserver);
         
         Notification notifyClient = Notification.newBuilder()
-                                                .setTransactionId(transactionId)
-                                                .setProcedure(Procedure.ADDUES)
-                                                .build();
+                .setTransactionId(transactionId)
+                .setProcedure(Procedure.ADDUES)
+                .build();
         
         StreamObserver<Notification> clientStub = subscribedHwMap.get(request.getHwid());
         clientStub.onNext(notifyClient);

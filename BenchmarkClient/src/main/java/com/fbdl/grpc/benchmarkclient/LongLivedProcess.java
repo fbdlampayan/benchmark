@@ -67,12 +67,12 @@ public class LongLivedProcess {
 
                         @Override
                         public void onError(Throwable thrwbl) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                            System.out.println("EdgeSimResponse onError");
                         }
 
                         @Override
                         public void onCompleted() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                            System.out.println("EdgeSimResponse onCompleted");
                         }
                     });
                     
@@ -88,12 +88,12 @@ public class LongLivedProcess {
 
             @Override
             public void onError(Throwable thrwbl) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("requestSubscribeObserver onError");
             }
 
             @Override
             public void onCompleted() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("requestSubscribeObserver onCompleted");
             }
         });
         
