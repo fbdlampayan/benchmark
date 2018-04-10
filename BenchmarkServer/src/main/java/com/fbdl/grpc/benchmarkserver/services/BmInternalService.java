@@ -5,10 +5,14 @@
  */
 package com.fbdl.grpc.benchmarkserver.services;
 
+import com.fbdl.benchmark.grpc.Notification;
+import com.fbdl.benchmark.grpc.Procedure;
 import com.fbdl.benchmark.grpc.SimRequest;
 import com.fbdl.benchmark.grpc.SimResponse;
 import com.fbdl.benchmark.grpc.SmServiceGrpc;
 import io.grpc.stub.StreamObserver;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  *
@@ -16,17 +20,32 @@ import io.grpc.stub.StreamObserver;
  */
 public class BmInternalService extends SmServiceGrpc.SmServiceImplBase {
     
+    private final ConcurrentMap<String, StreamObserver<Notification>> subscribedHwMap;
+    private final ConcurrentMap<String, SimRequest> simRequestMessageCache;
+    private final ConcurrentMap<String, StreamObserver<SimResponse>> simResponseObserverMap;
+    
+    public BmInternalService(ConcurrentMap subscribedHwMap, ConcurrentMap simRequestMessageCache, ConcurrentMap simResponseObserverMap) {
+        this.subscribedHwMap = subscribedHwMap;
+        this.simRequestMessageCache = simRequestMessageCache;
+        this.simResponseObserverMap = simResponseObserverMap;
+    }
+    
     @Override
     public void provisionSim(SimRequest request, StreamObserver<SimResponse> responseObserver) {
-        System.out.println("provision sim invoked simple");
+        System.out.println("provision sim invoked");
+        String transactionId = UUID.randomUUID().toString();
         
-        SimResponse response = SimResponse.newBuilder()
-                                          .setName("name from server")
-                                          .setPnmid("id from server")
-                                          .build();
+        simRequestMessageCache.put(transactionId, request);
+        simResponseObserverMap.put(transactionId, responseObserver);
         
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        Notification notifyClient = Notification.newBuilder()
+                                                .setTransactionId(transactionId)
+                                                .setProcedure(Procedure.ADDUES)
+                                                .build();
+        
+        StreamObserver<Notification> clientStub = subscribedHwMap.get(request.getHwid());
+        clientStub.onNext(notifyClient);
+        clientStub.onCompleted();
     }
     
 }

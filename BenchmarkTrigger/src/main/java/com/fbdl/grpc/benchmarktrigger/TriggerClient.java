@@ -24,7 +24,7 @@ public class TriggerClient {
         SmServiceGrpc.SmServiceBlockingStub clientBlocking = SmServiceGrpc.newBlockingStub(channel);
         
         try {
-            SimRequest request = SimRequest.newBuilder().setName("name from client").setImsi("imsi from client").build();
+            SimRequest request = SimRequest.newBuilder().setHwid("111").setName("name from client").setImsi("imsi from client").build();
             //or does tcp handshake start here?
             SimResponse response = clientBlocking.provisionSim(request);
             System.out.println("response: " + response.toString());

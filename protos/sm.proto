@@ -13,6 +13,7 @@ service SmService {
 message SimRequest {
    string name = 1;
    string imsi = 2;
+   string hwid = 3;
 }
 
 message SimResponse {

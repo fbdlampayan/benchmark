@@ -1,12 +1,18 @@
 package com.fbdl.grpc.benchmarkserver;
 
+import com.fbdl.benchmark.grpc.Notification;
+import com.fbdl.benchmark.grpc.SimRequest;
+import com.fbdl.benchmark.grpc.SimResponse;
 import com.fbdl.grpc.benchmarkserver.services.BmService;
 import com.fbdl.grpc.benchmarkserver.services.LongLived;
 import com.fbdl.grpc.benchmarkserver.utils.BmProperties;
 import com.fbdl.grpc.benchmarkserver.utils.BmUtil;
 import io.grpc.netty.NettyServerBuilder;
+import io.grpc.stub.StreamObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
@@ -19,6 +25,10 @@ import org.slf4j.LoggerFactory;
 public class Main {
     
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    
+    private final ConcurrentMap<String, StreamObserver<Notification>> subscribedHwMap = new ConcurrentHashMap<>(16, 0.9f, 1);
+    private final ConcurrentMap<String, SimRequest> simRequestMessageCache = new ConcurrentHashMap<>(16, 0.9f, 1);
+    private final ConcurrentMap<String, StreamObserver<SimResponse>> simResponseObserverMap = new ConcurrentHashMap<>(16, 0.9f, 1);
     
     public void start(String[] args) throws IOException, InterruptedException {
         String propertiesFilePath = "config/bm.properties"; //args[0];
@@ -46,7 +56,7 @@ public class Main {
         NettyServerBuilder.forPort(servingPort)
                           .useTransportSecurity(new File(serverCert), new File(serverKey))
                           .addService(new BmService())
-                          .addService(new LongLived())
+                          .addService(new LongLived(subscribedHwMap, simRequestMessageCache, simResponseObserverMap))
                           .executor(Executors.newFixedThreadPool(BmProperties.INSTANCE.getEdgeThreads()))
                           .build()
                           .start()
@@ -54,7 +64,7 @@ public class Main {
     }
     
     private void initializeInternalServer() {
-        BmInternalServer internalServer = new BmInternalServer();
+        BmInternalServer internalServer = new BmInternalServer(subscribedHwMap, simRequestMessageCache, simResponseObserverMap);
         Thread t = new Thread(internalServer);
         t.start();
     }    

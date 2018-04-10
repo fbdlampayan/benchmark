@@ -10,7 +10,6 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import java.io.File;
-import java.util.logging.Level;
 import javax.net.ssl.SSLException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
@@ -37,19 +36,32 @@ public class Client {
             LOG.error("Failed to load config file " + ex.getMessage());
             return;
         }
-    
-        System.out.println(BmProperties.INSTANCE.getTargetAddress());
-        System.out.println(BmProperties.INSTANCE.getEdgeCertPath());
         
+        //trigger subscription
+        //wait for notification
+        //when notification arrives, create a new tls tunnel and catch the request
+        //provide the response. 
+        //forever wait
+        
+        //triggerSimpleService();
+        LongLivedProcess l = new LongLivedProcess();
+        l.triggerSubscribe();
+        System.out.println("done!!!");
+
+        while (true) {}
+
+    }
+
+    private void triggerSimpleService() throws SSLException {
         channel = NettyChannelBuilder.forAddress(BmProperties.INSTANCE.getTargetAddress(),
-                                                 BmProperties.INSTANCE.getEdgePort())
-                                     .sslContext(GrpcSslContexts.forClient().trustManager(new File(BmProperties.INSTANCE.getEdgeCertPath())).build())
-                                     .build();
+                BmProperties.INSTANCE.getEdgePort())
+                .sslContext(GrpcSslContexts.forClient().trustManager(new File(BmProperties.INSTANCE.getEdgeCertPath())).build())
+                .build();
         
         bmBlocking = BmServiceGrpc.newBlockingStub(channel);
         ServiceRequest req = ServiceRequest.newBuilder().setName("client name").build();
         
-        try{
+        try {
             System.out.println("calling");
             ServiceResponse res = bmBlocking.simpleService(req);
             LOG.info("message received " + res.toString());
@@ -58,8 +70,7 @@ public class Client {
             ex.printStackTrace();
         }
     }
-    
-    
+       
     public static void main(String[] args) throws SSLException {
         Client client = new Client();
         client.start(args);
