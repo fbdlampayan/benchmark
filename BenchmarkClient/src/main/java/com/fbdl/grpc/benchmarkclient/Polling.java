@@ -47,7 +47,7 @@ class Polling implements Runnable{
             if(response.getTransactionId().equalsIgnoreCase("none")) {
                 System.out.println("no message for me yet");
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Polling.class.getName()).log(Level.SEVERE, null, ex);
                 }
