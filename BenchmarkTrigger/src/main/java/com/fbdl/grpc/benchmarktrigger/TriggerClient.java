@@ -20,25 +20,46 @@ public class TriggerClient {
         int port = 8081;
         
         //does tcp handshake start here?
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(ip, port).usePlaintext(true).build();
-        SmServiceGrpc.SmServiceBlockingStub clientBlocking = SmServiceGrpc.newBlockingStub(channel);
+//        ManagedChannel channel = ManagedChannelBuilder.forAddress(ip, port).usePlaintext(true).build();
+//        SmServiceGrpc.SmServiceBlockingStub clientBlocking = SmServiceGrpc.newBlockingStub(channel);
         
-        try {
-            SimRequest request = SimRequest.newBuilder().setHwid("111").setName("name from client").setImsi("imsi from client").build();
-            //or does tcp handshake start here?
-            long start = System.nanoTime();
-            SimResponse response = clientBlocking.provisionSim(request);
-            long end = System.nanoTime();
-            long out = end - start;
-            System.out.println("response: " + response.toString());
-            System.out.println("ET: " + out / 1000000);
+//        int y = Integer.parseInt(args[0]);
+//        System.out.println("y: " + y);
+
+        int max = 1;
+        long results[] = new long[max];
+
+        for(int x = 0; x < max; x++) {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(ip, port).usePlaintext(true).build();
+            SmServiceGrpc.SmServiceBlockingStub clientBlocking = SmServiceGrpc.newBlockingStub(channel);
+            try {
+                SimRequest request = SimRequest.newBuilder().setHwid(Integer.toString(x)).setName("name from client").setImsi("imsi from client").build();
+                //or does tcp handshake start here?
+                long start = System.nanoTime();
+                SimResponse response = clientBlocking.provisionSim(request);
+                long end = System.nanoTime();
+                long out = end - start;
+                results[x] = out;
+                System.out.println("response: " + response.toString());
+                System.out.println("ET in ms: " + out / 1000000);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                channel.shutdown();
+            }
         }
-        catch(Exception e) {
-            e.printStackTrace();
+        
+        long sum = 0;
+        System.out.println("computing");
+        for(int a = 0; a < max; a++) {
+            System.out.println("result [" + a + "]" + " : " + results[a]);
+            sum = results[a] + sum;
         }
-        finally {
-            channel.shutdown();
-        }
+        
+        System.out.println("sum: " + sum);
+        System.out.println("average in ms: " + (sum/max)/1000000);
     }
     
 }

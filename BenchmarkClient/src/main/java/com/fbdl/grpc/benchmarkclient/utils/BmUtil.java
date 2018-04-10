@@ -46,5 +46,6 @@ public class BmUtil {
         BmProperties.INSTANCE.setEdgePort(getPropertyNumericValue("bm.port"));
         BmProperties.INSTANCE.setEdgeThreads(getPropertyNumericValue("bm.threads"));
         BmProperties.INSTANCE.setTargetAddress(getPropertyValue("bm.address"));
+        BmProperties.INSTANCE.setClients(getPropertyNumericValue("bm.clients"));
     }
 }

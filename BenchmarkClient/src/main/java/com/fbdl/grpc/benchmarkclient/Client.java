@@ -37,9 +37,7 @@ public class Client {
             return;
         }
        
-        
-        Polling p = new Polling();
-        p.triggerPolling();
+        triggerPolling();
         
 //        triggerLongLived();
         System.out.println("done!!!");
@@ -48,8 +46,15 @@ public class Client {
 
     }
 
+    private void triggerPolling() {
+        for (int x = 0; x < BmProperties.INSTANCE.getClients(); x++) {
+            Polling p = new Polling(Integer.toString(x));
+            Thread t = new Thread(p);
+            t.start();
+        }
+    }
+
     private void triggerLongLived() throws SSLException {
-        //triggerSimpleService();
         LongLivedProcess l = new LongLivedProcess();
         l.triggerSubscribe();
     }

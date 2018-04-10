@@ -21,10 +21,15 @@ import javax.net.ssl.SSLException;
  *
  * @author FBDL
  */
-class Polling {
+class Polling implements Runnable{
     
     private static StreamObserver<EdgeSimPollingResponse> requestObserverToServer;
     private static String transactionId;
+    private String hwid;
+    
+    public Polling(String hwid) {
+        this.hwid = hwid;
+    }
     
     public void triggerPolling() throws SSLException {
         System.out.println("trigger Subcribe started");
@@ -36,7 +41,7 @@ class Polling {
             
             PollingServiceGrpc.PollingServiceBlockingStub pollingClient = PollingServiceGrpc.newBlockingStub(channel);
             
-            PollingRequest request = PollingRequest.newBuilder().setHwid("111").build();
+            PollingRequest request = PollingRequest.newBuilder().setHwid(hwid).build();
             PollingNotification response = pollingClient.subscribe(request);
             
             if(response.getTransactionId().equalsIgnoreCase("none")) {
@@ -91,6 +96,15 @@ class Polling {
         }//end of while
             
         
+    }
+
+    @Override
+    public void run() {
+        try {
+            triggerPolling();
+        } catch (SSLException ex) {
+            Logger.getLogger(Polling.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

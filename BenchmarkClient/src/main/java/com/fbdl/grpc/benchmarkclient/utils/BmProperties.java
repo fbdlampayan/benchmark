@@ -14,6 +14,21 @@ public enum BmProperties {
     private int edgeThreads;
     
     private String targetAddress;
+    private int clients;
+    
+    /**
+     * @return the clients
+     */
+    public int getClients() {
+        return clients;
+    }
+
+    /**
+     * @param clients the clients to set
+     */
+    public void setClients(int clients) {
+        this.clients = clients;
+    }
     
     /**
      * @return the targetAddress
