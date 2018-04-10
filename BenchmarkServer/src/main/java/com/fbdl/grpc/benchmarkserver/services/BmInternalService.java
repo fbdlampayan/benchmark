@@ -33,7 +33,8 @@ public class BmInternalService extends SmServiceGrpc.SmServiceImplBase {
     @Override
     public void provisionSim(SimRequest request, StreamObserver<SimResponse> responseObserver) {
         System.out.println("provision sim invoked");
-        pollingSupport(request, responseObserver);
+//        pollingSupport(request, responseObserver);
+        longLivedSupport(request, responseObserver);
     }
     
     private void pollingSupport(SimRequest request, StreamObserver<SimResponse> responseObserver) {

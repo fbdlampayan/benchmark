@@ -26,10 +26,15 @@ import javax.net.ssl.SSLException;
  *
  * @author lampayan
  */
-public class LongLivedProcess {
+public class LongLivedProcess implements Runnable {
     
     private static StreamObserver<EdgeSimResponse> requestObserverToServer;
     private static String transactionId;
+    private String hwid;
+    
+    public LongLivedProcess(String hwid) {
+        this.hwid = hwid;
+    }
     
     public void triggerSubscribe() throws SSLException {
         System.out.println("trigger Subcribe started");
@@ -98,11 +103,20 @@ public class LongLivedProcess {
         });
         
         System.out.println("subscribing to server");
-        SubscribeRequest subscribeRequest = SubscribeRequest.newBuilder().setHwid("111").build();
+        SubscribeRequest subscribeRequest = SubscribeRequest.newBuilder().setHwid(hwid).build();
         requestSubscribeObserver.onNext(subscribeRequest);
         System.out.println("subsribe sent");
             
         
+    }
+
+    @Override
+    public void run() {
+        try {
+            triggerSubscribe();
+        } catch (SSLException ex) {
+            Logger.getLogger(LongLivedProcess.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
