@@ -13,6 +13,7 @@ import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
@@ -45,12 +46,7 @@ class Polling implements Runnable{
             PollingNotification response = pollingClient.subscribe(request);
             
             if(response.getTransactionId().equalsIgnoreCase("none")) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Polling.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                channel.shutdown();
+                //do nothing
             }
             else {
                 transactionId = response.getTransactionId();
@@ -68,16 +64,17 @@ class Polling implements Runnable{
                                 SimResponse res = SimResponse.newBuilder().setName("response polling client").build();
                                 EdgeSimPollingResponse procedureResponse = EdgeSimPollingResponse.newBuilder().setTransactionId(transactionId).setType(PollingType.RESPONSE).setSimResponseMessage(res).build();
                                 requestObserverToServer.onNext(procedureResponse);
-
+                                requestObserverToServer.onCompleted();
                             }
 
                             @Override
                             public void onError(Throwable thrwbl) {
-                                System.out.println("EdgeSimPollingResponse onError");
+                                System.out.println("EdgeSimPollingResponse onError " + thrwbl);
                             }
 
                             @Override
                             public void onCompleted() {
+                                procedureChannel.shutdown();
                             }
                         });
 
@@ -89,9 +86,19 @@ class Polling implements Runnable{
                         Logger.getLogger(LongLivedProcess.class.getName()).log(Level.SEVERE, null, ex);
                     }
             }
+            pollingDelay(channel);
         }//end of while
             
         
+    }
+
+    private void pollingDelay(ManagedChannel channel) {
+        channel.shutdown();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Polling.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

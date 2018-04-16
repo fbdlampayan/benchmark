@@ -5,6 +5,7 @@ import com.fbdl.benchmark.grpc.SimResponse;
 import com.fbdl.benchmark.grpc.SmServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -12,7 +13,7 @@ import io.grpc.ManagedChannelBuilder;
  */
 public class TriggerClient {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         
         System.out.println("client start");
         
@@ -26,7 +27,7 @@ public class TriggerClient {
 //        int y = Integer.parseInt(args[0]);
 //        System.out.println("y: " + y);
 
-        int max = 1;
+        int max = 100;
         long results[] = new long[max];
 
         for(int x = 0; x < max; x++) {
@@ -47,7 +48,7 @@ public class TriggerClient {
                 e.printStackTrace();
             }
             finally {
-                channel.shutdown();
+                channel.shutdown().awaitTermination(3, TimeUnit.SECONDS);
             }
         }
         

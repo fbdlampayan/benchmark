@@ -40,12 +40,13 @@ public class EdgeSimPollingResponseStream implements StreamObserver<EdgeSimPolli
             simResponseObserverMap.remove(v.getTransactionId());
             streamToBack.onNext(v.getSimResponseMessage());
             streamToBack.onCompleted();
+            responseObserver.onCompleted();
         }
     }
 
     @Override
     public void onError(Throwable thrwbl) {
-        System.out.println("EdgeSimPollingResponseStream onError");
+        System.out.println("EdgeSimPollingResponseStream onError " + thrwbl.getMessage());
     }
 
     @Override

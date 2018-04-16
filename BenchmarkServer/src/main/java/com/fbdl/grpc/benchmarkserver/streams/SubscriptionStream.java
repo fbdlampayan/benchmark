@@ -44,7 +44,8 @@ public class SubscriptionStream implements StreamObserver<SubscribeRequest> {
 
     @Override
     public void onError(Throwable t) {
-        System.out.println("subscribe onError called " + this.streamId);
+        System.out.println("subscribe onError called " + this.streamId + " - " + t.getMessage());
+        t.printStackTrace();
     }
 
     @Override
