@@ -31,13 +31,11 @@ public class EdgeSimPollingResponseStream implements StreamObserver<EdgeSimPolli
     @Override
     public void onNext(EdgeSimPollingResponse v) {
         if(v.getType() == PollingType.INIT) {
-            System.out.println("received procedure polling init");
             SimRequest request = simRequestMessageCache.get(v.getTransactionId());
             simRequestMessageCache.remove(v.getTransactionId());
             responseObserver.onNext(request);
         }
         else {
-            System.out.println("sending response to backend via polling");
             StreamObserver<SimResponse> streamToBack = simResponseObserverMap.get(v.getTransactionId());
             simResponseObserverMap.remove(v.getTransactionId());
             streamToBack.onNext(v.getSimResponseMessage());
@@ -52,7 +50,6 @@ public class EdgeSimPollingResponseStream implements StreamObserver<EdgeSimPolli
 
     @Override
     public void onCompleted() {
-        System.out.println("EdgeSimPollingResponseStream onCompleted");
     }
     
 }

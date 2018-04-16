@@ -32,9 +32,7 @@ public class PollingServices extends PollingServiceGrpc.PollingServiceImplBase {
     }
     
     @Override
-    public void subscribe(PollingRequest request, StreamObserver<PollingNotification> responseObserver) {
-        System.out.println("polling subscribed invoked " + request.toString());
-        
+    public void subscribe(PollingRequest request, StreamObserver<PollingNotification> responseObserver) {        
         //check do you have a message for you
         if(!simRequestMessageCache.containsKey(request.getHwid())) {
             //if none, create your own response with "none" as transactionId

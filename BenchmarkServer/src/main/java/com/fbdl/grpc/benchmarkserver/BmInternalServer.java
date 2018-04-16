@@ -29,7 +29,7 @@ public class BmInternalServer implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("launching internal server");
+        System.out.println("launched internal server");
         
         try {
             

@@ -34,13 +34,11 @@ public class LongLived extends LongLivedServiceGrpc.LongLivedServiceImplBase {
     
     @Override
     public StreamObserver<SubscribeRequest> subscribe(StreamObserver<Notification> responseObserver) {
-        System.out.println("subscribe invoked");
         return new SubscriptionStream(subscribedHwMap, responseObserver);
     }
     
     @Override
     public StreamObserver<EdgeSimResponse> edgeProvisionSim(StreamObserver<SimRequest> responseObserver) {
-        System.out.println("edge Provision Sim is called");
         return new EdgeSimResponseStream(simRequestMessageCache, simResponseObserverMap, responseObserver);
     }
 }

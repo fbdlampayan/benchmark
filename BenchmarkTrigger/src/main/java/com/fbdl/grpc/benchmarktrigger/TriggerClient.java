@@ -26,7 +26,7 @@ public class TriggerClient {
 //        int y = Integer.parseInt(args[0]);
 //        System.out.println("y: " + y);
 
-        int max = 100;
+        int max = 1;
         long results[] = new long[max];
 
         for(int x = 0; x < max; x++) {

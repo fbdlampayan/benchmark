@@ -33,12 +33,10 @@ public class EdgeSimResponseStream implements StreamObserver<EdgeSimResponse> {
     @Override
     public void onNext(EdgeSimResponse v) {
         if(v.getType() == Type.INIT) {
-            System.out.println("received procedure init");
             SimRequest request = simRequestMessageCache.get(v.getTransactionId());
             responseObserver.onNext(request);
         }
         else {
-            System.out.println("sending something back to backend");
             StreamObserver<SimResponse> streamToBack = simResponseObserverMap.get(v.getTransactionId());
             streamToBack.onNext(v.getSimResponseMessage());
             streamToBack.onCompleted();
@@ -52,7 +50,7 @@ public class EdgeSimResponseStream implements StreamObserver<EdgeSimResponse> {
 
     @Override
     public void onCompleted() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        responseObserver.onCompleted();
     }
     
 }

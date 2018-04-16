@@ -39,7 +39,6 @@ public class Client {
        
 //        triggerPolling();
         triggerLongLived();
-        System.out.println("done!!!");
 
         while (true) {}
 
@@ -71,10 +70,7 @@ public class Client {
         ServiceRequest req = ServiceRequest.newBuilder().setName("client name").build();
         
         try {
-            System.out.println("calling");
             ServiceResponse res = bmBlocking.simpleService(req);
-            LOG.info("message received " + res.toString());
-            System.out.println("response " + res.toString());
         } catch (StatusRuntimeException ex) {
             ex.printStackTrace();
         }

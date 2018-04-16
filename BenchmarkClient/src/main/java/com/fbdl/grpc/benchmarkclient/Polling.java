@@ -32,7 +32,7 @@ class Polling implements Runnable{
     }
     
     public void triggerPolling() throws SSLException {
-        System.out.println("trigger Subcribe started");
+        System.out.println("trigger Subcribe polling started " + hwid);
         
         while(true) {
             ManagedChannel channel = NettyChannelBuilder.forAddress(BmProperties.INSTANCE.getTargetAddress(), BmProperties.INSTANCE.getEdgePort())
@@ -45,7 +45,6 @@ class Polling implements Runnable{
             PollingNotification response = pollingClient.subscribe(request);
             
             if(response.getTransactionId().equalsIgnoreCase("none")) {
-                System.out.println("no message for me yet");
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -54,7 +53,6 @@ class Polling implements Runnable{
                 channel.shutdown();
             }
             else {
-                System.out.println("message recieved! " + response.toString());
                 transactionId = response.getTransactionId();
                     try {
                         //create procedure stream on a different tunnel
@@ -66,7 +64,6 @@ class Polling implements Runnable{
                         StreamObserver<EdgeSimPollingResponse> requestObserver = procedureClient.edgePollingProvisionSim(new StreamObserver<SimRequest>() {
                             @Override
                             public void onNext(SimRequest v) {
-                                System.out.println("on next sim request from server " + v.toString());
                                 //so consume and respond to server
                                 SimResponse res = SimResponse.newBuilder().setName("response polling client").build();
                                 EdgeSimPollingResponse procedureResponse = EdgeSimPollingResponse.newBuilder().setTransactionId(transactionId).setType(PollingType.RESPONSE).setSimResponseMessage(res).build();
@@ -81,7 +78,6 @@ class Polling implements Runnable{
 
                             @Override
                             public void onCompleted() {
-                                System.out.println("EdgeSimPollingResponse onCompleted");
                             }
                         });
 

@@ -39,9 +39,7 @@ public class SubscriptionStream implements StreamObserver<SubscribeRequest> {
     
     @Override
     public void onNext(SubscribeRequest value) {
-        System.out.println("subscribe onnext called " + this.streamId);
         subscribeHw(value.getHwid());
-        System.out.println("map size: " + subscribedHwMap.size());
     }
 
     @Override

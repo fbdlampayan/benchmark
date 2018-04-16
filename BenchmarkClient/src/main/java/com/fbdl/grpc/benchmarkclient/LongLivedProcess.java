@@ -37,7 +37,6 @@ public class LongLivedProcess implements Runnable {
     }
     
     public void triggerSubscribe() throws SSLException {
-        System.out.println("trigger Subcribe started");
         
         ManagedChannel channel = NettyChannelBuilder.forAddress(BmProperties.INSTANCE.getTargetAddress(),
                 BmProperties.INSTANCE.getEdgePort())
@@ -50,7 +49,6 @@ public class LongLivedProcess implements Runnable {
         StreamObserver<SubscribeRequest> requestSubscribeObserver = asyncClient.subscribe(new StreamObserver<Notification>() {
             @Override
             public void onNext(Notification v) {
-                System.out.println("notification message received " + v.toString());
                 transactionId = v.getTransactionId();
                 try {
                     //create procedure stream on a different tunnel
@@ -62,11 +60,11 @@ public class LongLivedProcess implements Runnable {
                     StreamObserver<EdgeSimResponse> requestObserver = procedureClient.edgeProvisionSim(new StreamObserver<SimRequest>() {
                         @Override
                         public void onNext(SimRequest v) {
-                            System.out.println("on next sim request from server " + v.toString());
                             //so consume and respond to server
                             SimResponse res = SimResponse.newBuilder().setName("response long live client").build();
                             EdgeSimResponse procedureInit = EdgeSimResponse.newBuilder().setTransactionId(transactionId).setType(Type.RESPONSE).setSimResponseMessage(res).build();
                             requestObserverToServer.onNext(procedureInit);
+                            requestObserverToServer.onCompleted();
                             
                         }
 
@@ -77,7 +75,6 @@ public class LongLivedProcess implements Runnable {
 
                         @Override
                         public void onCompleted() {
-                            System.out.println("EdgeSimResponse onCompleted");
                         }
                     });
                     
@@ -98,16 +95,12 @@ public class LongLivedProcess implements Runnable {
 
             @Override
             public void onCompleted() {
-                System.out.println("requestSubscribeObserver onCompleted");
             }
         });
         
-        System.out.println("subscribing to server");
         SubscribeRequest subscribeRequest = SubscribeRequest.newBuilder().setHwid(hwid).build();
         requestSubscribeObserver.onNext(subscribeRequest);
-        System.out.println("subsribe sent");
-            
-        
+        System.out.println("subscribed to server as hwid: " + hwid);
     }
 
     @Override
