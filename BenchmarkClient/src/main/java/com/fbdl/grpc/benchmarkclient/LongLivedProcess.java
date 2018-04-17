@@ -70,7 +70,7 @@ public class LongLivedProcess implements Runnable {
 
                         @Override
                         public void onError(Throwable thrwbl) {
-                            System.out.println("EdgeSimResponse onError");
+                            System.out.println("EdgeSimResponse onError " + thrwbl.getMessage());
                         }
 
                         @Override
@@ -90,7 +90,7 @@ public class LongLivedProcess implements Runnable {
 
             @Override
             public void onError(Throwable thrwbl) {
-                System.out.println("requestSubscribeObserver onError");
+                System.out.println("requestSubscribeObserver onError " + thrwbl.getMessage());
             }
 
             @Override

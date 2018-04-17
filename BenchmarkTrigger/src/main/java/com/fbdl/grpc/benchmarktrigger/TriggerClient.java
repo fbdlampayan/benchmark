@@ -21,9 +21,9 @@ public class TriggerClient {
         int port = 8081;
         int numberOfRequests = 100;
         
-        int numberOfClients = 1;
+        int numberOfClients = 100;
         
-        doWarmUp(numberOfClients, ip, port, numberOfRequests);
+//        doWarmUp(numberOfClients, ip, port, numberOfRequests);
         doBenchmark(ip, port, numberOfClients);
     }
 
@@ -36,8 +36,7 @@ public class TriggerClient {
                 SimRequest request = SimRequest.newBuilder().setHwid(Integer.toString(x)).setName("name from client").setImsi("imsi from client").build();
                 for(int y = 0; y < numberOfRequests; y++) {
                     SimResponse response = clientBlocking.provisionSim(request);
-                    System.out.println("response: " + response.getName());
-//                    Thread.sleep(1000);
+                    System.out.println("response [" + x + "]" + "[" + y + "]" + ": " + response.getName());
                 }
             }
             catch(Exception e) {
