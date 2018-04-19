@@ -18,6 +18,7 @@ import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
@@ -41,6 +42,8 @@ public class LongLivedProcess implements Runnable {
         ManagedChannel channel = NettyChannelBuilder.forAddress(BmProperties.INSTANCE.getTargetAddress(),
                 BmProperties.INSTANCE.getEdgePort())
                 .sslContext(GrpcSslContexts.forClient().trustManager(new File(BmProperties.INSTANCE.getEdgeCertPath())).build())
+                .keepAliveTime(10, TimeUnit.SECONDS)
+                .keepAliveTimeout(10, TimeUnit.SECONDS)
                 .build();
         
         LongLivedServiceGrpc.LongLivedServiceStub asyncClient = LongLivedServiceGrpc.newStub(channel);

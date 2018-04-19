@@ -37,8 +37,8 @@ public class Client {
             return;
         }
        
-        triggerPolling();
-//        triggerLongLived();
+//        triggerPolling();
+        triggerLongLived();
 
         while (true) {}
 

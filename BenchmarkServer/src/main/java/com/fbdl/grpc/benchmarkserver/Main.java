@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,8 @@ public class Main {
                           .addService(new BmService())
                           .addService(new LongLived(subscribedHwMap, simRequestMessageCache, simResponseObserverMap))
                           .addService(new PollingServices(subscribedHwMap, simRequestMessageCache, simResponseObserverMap))
+                          .keepAliveTime(10, TimeUnit.SECONDS)
+                          .keepAliveTimeout(10, TimeUnit.SECONDS)
                           .executor(Executors.newFixedThreadPool(BmProperties.INSTANCE.getEdgeThreads()))
                           .build()
                           .start()
